@@ -23,6 +23,10 @@ is more honest than building in secret.
 - Landing page (this repo's public face)
 - Static 3D figure in React Three Fiber
 - Design system aligned with FIELD｜场域 (warm cream, near-black, brick orange)
+- Python core package `spatium-bio` — PDB fetch / parse / Cα extraction,
+  with offline + network tests (`packages/core/`)
+- Reproducible hello-protein script — 4HHB → Cα distance map
+  (`examples/00_hello_protein.py`)
 - Repo + MIT license
 
 **Doesn't (yet)**
@@ -35,18 +39,34 @@ is more honest than building in secret.
 - Benchmarks — not started
 - Public API — not started
 
-I'll update this list as things move.
+See [docs/reading-list.md](docs/reading-list.md) for what I'm reading
+on the way there. I'll update both lists as things move.
 
 ## Run it
+
+The web workspace:
 
 ```bash
 git clone https://github.com/EthanXie-Hub/spatium-bio.git
 cd spatium-bio/apps/web
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
 ```
 
 Node 20+. No keys needed.
+
+The Python core (`spatium-bio`) — needs [`uv`](https://docs.astral.sh/uv/):
+
+```bash
+cd spatium-bio
+uv sync --all-groups --project packages/core
+uv run --project packages/core python examples/00_hello_protein.py
+# → examples/figures/00_4hhb_calpha_distance.png
+```
+
+Python 3.11+. Tests live under `packages/core/tests/`; run with
+`uv run --project packages/core pytest -m "not network"` for the
+offline suite.
 
 ## Contact
 

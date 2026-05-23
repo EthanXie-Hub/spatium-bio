@@ -67,8 +67,10 @@ const ASSETS: Asset[] = [
 const I_HAVE = [
   "A landing page and design system",
   "A static 3D figure (R3F)",
+  "A Python core package — PDB fetch / parse / Cα extraction, with tests",
+  "A reproducible hello-protein script (4HHB → Cα distance map)",
+  "A reading list I'm working through (docs/reading-list.md)",
   "An open repo, MIT-licensed",
-  "An honest writeup of what's missing (this list)",
 ];
 
 const I_DONT_HAVE = [
