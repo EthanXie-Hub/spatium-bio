@@ -1,279 +1,594 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+const ProteinScene = dynamic(() => import("@/components/protein-scene"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 z-0 bg-paper-soft" />,
+});
+
+/*
+  The three reference structures I want this workspace to handle eventually.
+  Nothing in the repo actually processes them yet — they are illustrative.
+*/
+type Asset = {
+  pdb: string;
+  name: string;
+  uniprot: string;
+  organism: string;
+  residueRange: string;
+  residueCount: number;
+  pfam?: string;
+  ec?: string;
+  fold: string;
+  note: string;
+};
+
+const ASSETS: Asset[] = [
+  {
+    pdb: "4HHB",
+    name: "Hemoglobin (deoxy)",
+    uniprot: "P69905",
+    organism: "H. sapiens",
+    residueRange: "V1–R141",
+    residueCount: 141,
+    pfam: "PF00042",
+    fold: "Globin · all-α",
+    note:
+      "Standard reference structure. I want this one to work first because the literature is unambiguous and the fold is small.",
+  },
+  {
+    pdb: "1AKE",
+    name: "Adenylate Kinase",
+    uniprot: "P69441",
+    organism: "E. coli",
+    residueRange: "M1–G214",
+    residueCount: 214,
+    pfam: "PF00406",
+    ec: "EC 2.7.4.3",
+    fold: "P-loop NTPase · LID + NMP lobes",
+    note:
+      "I picked this because the open ↔ closed motion between the LID and NMP lobes is the canonical example for testing conformational ensembles.",
+  },
+  {
+    pdb: "1UBQ",
+    name: "Ubiquitin",
+    uniprot: "P0CG48",
+    organism: "H. sapiens",
+    residueRange: "M1–G76",
+    residueCount: 76,
+    fold: "β-grasp",
+    note: "76 residues, well-behaved. Useful as a sanity check before scaling up.",
+  },
+];
+
+const I_HAVE = [
+  "A landing page and design system",
+  "A static 3D figure (R3F)",
+  "An open repo, MIT-licensed",
+  "An honest writeup of what's missing (this list)",
+];
+
+const I_DONT_HAVE = [
+  "An encoder",
+  "Real per-residue embeddings",
+  "A manifold or projection",
+  "Function or fold-similarity readouts",
+  "Generation / sampling",
+  "Any benchmark results",
+  "A public API",
+];
+
+const PLAN = [
+  {
+    label: "Encoder",
+    body: "Per-residue embeddings via the ESM-2 family. Wire it up locally first, then expose as a CLI.",
+  },
+  {
+    label: "Manifold",
+    body: "A learned metric over residue topology so that nearby points share fold and contact pattern.",
+  },
+  {
+    label: "Operators",
+    body: "Fold-similarity retrieval and function readouts. Generation comes last, once the metric is stable.",
+  },
+];
+
+const GITHUB_URL = "https://github.com/EthanXie-Hub/spatium-bio";
 
 export default function Home() {
-  const [activeAsset, setActiveAsset] = useState("protein.pdb");
-
-  const analysisMap = {
-    "protein.pdb": {
-      title: "Protein Family",
-      value: "Kinase-like structure",
-      scoreLabel: "Similarity Score",
-      score: "98.2%",
-      space: "Structure topology loaded",
-    },
-    "embeddings.vec": {
-      title: "Embedding Vector",
-      value: "ESM-style latent representation",
-      scoreLabel: "Vector Dimension",
-      score: "4096",
-      space: "Latent space projection ready",
-    },
-    "structure.json": {
-      title: "Structure Metadata",
-      value: "Parsed residue topology",
-      scoreLabel: "Chains Detected",
-      score: "3",
-      space: "Spatial graph reconstructed",
-    },
-  };
-
-  const activeAnalysis = analysisMap[activeAsset as keyof typeof analysisMap];
+  const [activePdb, setActivePdb] = useState<string>(ASSETS[0].pdb);
+  const activeAsset = useMemo(
+    () => ASSETS.find((asset) => asset.pdb === activePdb) ?? ASSETS[0],
+    [activePdb],
+  );
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px]" />
-      <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/5 blur-3xl" />
-      <div className="absolute left-[30%] top-[35%] h-[500px] w-[500px] rounded-full bg-purple-500/5 blur-3xl" />
-      <div className="absolute right-[25%] bottom-[20%] h-[400px] w-[400px] rounded-full bg-blue-500/5 blur-3xl" />
+    <main className="relative min-h-screen overflow-x-hidden bg-paper text-ink">
+      <TopBar />
+      <Hero />
+      <Why />
+      <Status />
+      <Figure activeAsset={activeAsset} onSelect={setActivePdb} />
+      <Plan />
+      <Repo />
+      <Footer />
+    </main>
+  );
+}
 
-      <header className="absolute top-0 z-50 w-full">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          <div className="text-sm font-medium tracking-[0.2em] text-white/80">
-            SPATIUM BIO
-          </div>
+/* ------------------------------------------------------------------ */
+function TopBar() {
+  return (
+    <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <a href="#top" className="flex items-center gap-3" id="top">
+          <span className="font-serif text-[19px] leading-none tracking-[-0.018em] text-ink">
+            Spatium Bio
+          </span>
+          <span className="chip-id">
+            <span className="chip-dot" />
+            v0.1.0
+          </span>
+        </a>
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="text-[13.5px] text-muted-strong transition-colors hover:text-ink"
+        >
+          GitHub ↗
+        </a>
+      </div>
+    </header>
+  );
+}
 
-          <nav className="hidden items-center gap-8 text-sm text-white/50 md:flex">
-            <a href="#" className="transition hover:text-white">Workspace</a>
-            <a href="#" className="transition hover:text-white">Research</a>
-            <a href="#" className="transition hover:text-white">Docs</a>
-            <a href="#" className="transition hover:text-white">GitHub</a>
-          </nav>
-        </div>
-      </header>
-
+/* ------------------------------------------------------------------ */
+function Hero() {
+  return (
+    <section className="relative mx-auto max-w-5xl px-6 pb-20 pt-24 md:pt-32">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6"
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-3xl"
       >
-        <div className="mb-6 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-sm text-white/60 backdrop-blur">
-          AI-native Computational Biology Workspace
+        <div className="eyebrow">
+          a workspace for computational biology · in progress
         </div>
 
-        <h1 className="max-w-6xl text-center text-7xl font-semibold leading-[0.92] tracking-[-0.06em] md:text-[9rem]">
-          Biological
+        <h1 className="font-serif mt-6 text-5xl leading-[1.04] tracking-[-0.022em] text-ink md:text-[84px]">
+          Biology,
           <br />
-          Computation,
-          <br />
-          Reimagined.
+          rendered as space.
         </h1>
 
-        <p className="mt-10 max-w-2xl text-center text-lg leading-8 text-white/40">
-          Spatium Bio is an AI-native workspace for protein understanding,
-          molecular analysis, and biological reasoning.
+        <p className="mt-8 max-w-xl text-[17px] leading-[1.65] text-muted-strong">
+          I&apos;m building a workspace that treats proteins as points in a
+          learned space — where retrieval, function, and generation share a
+          single manifold. The UI is what I&apos;m sure about. The science is
+          what I&apos;m learning.
         </p>
 
-        <div className="mt-14 flex gap-4">
-          <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-white/90">
-            Launch Workspace
-          </button>
-
-          <button className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10">
-            GitHub
-          </button>
+        <div className="mt-9 flex flex-wrap items-center gap-3">
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn-ink">
+            <GitHubMark /> View on GitHub
+          </a>
+          <span className="ml-1 font-mono text-[11.5px] uppercase tracking-[0.16em] text-muted">
+            MIT · solo project
+          </span>
         </div>
       </motion.div>
+    </section>
+  );
+}
 
-      <section className="relative z-10 mx-auto mt-32 max-w-7xl px-6 pb-32">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
-        >
-          <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="h-3 w-3 rounded-full bg-red-400/70" />
-              <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
-              <div className="h-3 w-3 rounded-full bg-green-400/70" />
+/* ------------------------------------------------------------------ */
+function Why() {
+  return (
+    <section id="why" className="border-t border-line py-20">
+      <div className="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[160px_1fr]">
+        <div className="eyebrow pt-2">Why</div>
+        <div className="max-w-2xl space-y-5 text-[15.5px] leading-[1.75] text-ink-soft">
+          <p>
+            I&apos;m a designer learning computational biology. Spatium Bio is
+            the workspace I want to use while I learn it.
+          </p>
+          <p>
+            The thing I keep noticing in the field is that structure
+            prediction, function annotation, and generative sampling are
+            usually three separate stacks with three separate representations.
+            I want to see what happens if they share one — even a small,
+            honest one.
+          </p>
+          <p>
+            Right now this is mostly a UI. The encoder isn&apos;t trained, the
+            manifold isn&apos;t built, the readouts don&apos;t exist. I&apos;m
+            shipping it early because watching the gap close in public is more
+            honest than waiting until it&apos;s &ldquo;done.&rdquo;
+          </p>
+          <p className="text-muted-strong">
+            If you&apos;re in the field and any of this sounds wrong, please
+            tell me —{" "}
+            <a
+              href="mailto:nyssa520ethan@gmail.com"
+              className="text-brand-ink underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
+            >
+              email
+            </a>{" "}
+            or open an issue.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function Status() {
+  return (
+    <section id="status" className="border-t border-line bg-paper-soft/50 py-20">
+      <div className="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[160px_1fr]">
+        <div className="eyebrow pt-2">Where it is</div>
+        <div className="grid gap-x-12 gap-y-8 md:grid-cols-2">
+          <div>
+            <div className="font-serif text-[22px] leading-snug tracking-[-0.015em] text-ink">
+              What I have
             </div>
+            <ul className="mt-4 space-y-2.5">
+              {I_HAVE.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-3 text-[14.5px] leading-[1.55] text-ink-soft"
+                >
+                  <span
+                    aria-hidden
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <div className="text-xs tracking-[0.08em] text-white/70">
-  Protein Workspace
-</div>
-            <div />
+          <div>
+            <div className="font-serif text-[22px] leading-snug tracking-[-0.015em] text-ink">
+              What I don&apos;t
+            </div>
+            <ul className="mt-4 space-y-2.5">
+              {I_DONT_HAVE.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-3 text-[14.5px] leading-[1.55] text-muted-strong"
+                >
+                  <span
+                    aria-hidden
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full border border-muted/60"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function Figure({
+  activeAsset,
+  onSelect,
+}: {
+  activeAsset: Asset;
+  onSelect: (pdb: string) => void;
+}) {
+  return (
+    <section id="figure" className="border-t border-line py-20">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-8 grid gap-3 md:grid-cols-[160px_1fr]">
+          <div className="eyebrow pt-1">The workspace</div>
+          <p className="max-w-2xl text-[14.5px] leading-[1.65] text-muted-strong">
+            This is the shape of the workspace I&apos;m building toward. The
+            assets are real PDB structures I want to support; the 3D figure is
+            a decorative placeholder until I have an encoder to drive it.
+          </p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="card overflow-hidden"
+        >
+          <div className="flex items-center justify-between border-b border-line bg-paper/70 px-5 py-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+              spatium-bio · figure
+            </span>
+            <div className="hidden items-center gap-2 md:flex">
+              <span className="chip-id">{activeAsset.pdb}</span>
+              <span className="chip-id">UniProt {activeAsset.uniprot}</span>
+              {activeAsset.ec ? (
+                <span className="chip-id">{activeAsset.ec}</span>
+              ) : null}
+            </div>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+              mock
+            </span>
           </div>
 
           <div className="grid grid-cols-12">
-            <div className="col-span-2 border-r border-white/10 p-4">
-              <div className="mb-6 text-xs uppercase tracking-[0.2em] text-white/30">
-                Assets
-              </div>
-
-              <div className="space-y-3 text-sm text-white/50">
-                {["protein.pdb", "embeddings.vec", "structure.json"].map((asset) => (
-                  <button
-                    key={asset}
-                    onClick={() => setActiveAsset(asset)}
-                    className={`w-full rounded-xl px-3 py-2 text-left transition ${
-                      activeAsset === asset
-                        ? "bg-white/10 text-white"
-                        : "hover:bg-white/5"
-                    }`}
-                  >
-                    {asset}
-                  </button>
-                ))}
+            {/* asset list */}
+            <div className="col-span-12 border-b border-line p-5 md:col-span-3 md:border-b-0 md:border-r">
+              <div className="eyebrow mb-4">Three structures</div>
+              <div className="space-y-2">
+                {ASSETS.map((asset) => {
+                  const isActive = asset.pdb === activeAsset.pdb;
+                  return (
+                    <button
+                      key={asset.pdb}
+                      type="button"
+                      onClick={() => onSelect(asset.pdb)}
+                      className={`group block w-full rounded-[10px] border px-3 py-3 text-left transition-colors ${
+                        isActive
+                          ? "border-brand/35 bg-brand-soft/70"
+                          : "border-line bg-paper hover:bg-paper-soft"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`font-mono text-[12px] tracking-[0.02em] ${
+                            isActive ? "text-brand-ink" : "text-ink-soft"
+                          }`}
+                        >
+                          {asset.pdb}
+                        </span>
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            isActive ? "bg-brand" : "bg-muted/40"
+                          }`}
+                        />
+                      </div>
+                      <div className="mt-1 text-[12.5px] text-muted-strong">
+                        {asset.name}
+                      </div>
+                      <div className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted">
+                        {asset.residueCount} aa · {asset.organism}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            <div className="col-span-7 flex min-h-[500px] items-center justify-center border-r border-white/10">
-  <div className="relative flex h-[280px] w-[280px] items-center justify-center">
-  <motion.div
-  animate={{
-    rotate: 360,
-    y: [0, -6, 0],
-    opacity: [0.65, 1, 0.65],
-    boxShadow: [
-      "0 0 24px rgba(34,211,238,0.08)",
-      "0 0 72px rgba(34,211,238,0.18)",
-      "0 0 24px rgba(34,211,238,0.08)",
-    ],
-  }}
-  transition={{
-    rotate: { duration: 24, repeat: Infinity, ease: "linear" },
-    y: {
-      duration: 5,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-    opacity: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
-    boxShadow: { duration: 3.2, repeat: Infinity, ease: "easeInOut" },
-  }}
-  className="absolute inset-0 rounded-full border border-cyan-300/40 border-t-cyan-200/40 border-r-cyan-400/20 border-b-cyan-300/10"
-/>
+            {/* scene */}
+            <div className="relative col-span-12 min-h-[420px] overflow-hidden border-b border-line md:col-span-6 md:border-b-0 md:border-r md:min-h-[500px]">
+              <ProteinScene />
 
-<motion.div
-  animate={{
-    rotate: -360,
-    opacity: [0.55, 0.95, 0.55],
-    boxShadow: [
-      "0 0 18px rgba(168,85,247,0.06)",
-      "0 0 54px rgba(168,85,247,0.16)",
-      "0 0 18px rgba(168,85,247,0.06)",
-    ],
-  }}
-  transition={{
-    rotate: { duration: 36, repeat: Infinity, ease: "linear" },
-    opacity: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
-    boxShadow: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
-  }}
-  className="absolute h-[220px] w-[220px] rounded-full border border-purple-400/20 border-r-purple-200/40"
-/>
-
-<motion.div
-  animate={{
-    rotate: 360,
-    opacity: [0.6, 1, 0.6],
-    boxShadow: [
-      "0 0 12px rgba(96,165,250,0.05)",
-      "0 0 38px rgba(96,165,250,0.14)",
-      "0 0 12px rgba(96,165,250,0.05)",
-    ],
-  }}
-  transition={{
-    rotate: { duration: 48, repeat: Infinity, ease: "linear" },
-    opacity: { duration: 3.8, repeat: Infinity, ease: "easeInOut" },
-    boxShadow: { duration: 3.8, repeat: Infinity, ease: "easeInOut" },
-  }}
-  className="
-absolute
-h-[140px]
-w-[140px]
-rounded-full
-border
-border-blue-200/20
-bg-gradient-to-br
-from-white/[0.03]
-to-white/[0.01]
-backdrop-blur-xl
-"
-/>
-
-    <motion.div
-      key={activeAsset}
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4 }}
-      className="relative z-10 text-sm text-white/40"
-    >
-      {activeAsset === "protein.pdb" && "Protein Structure"}
-      {activeAsset === "embeddings.vec" && "Latent Embedding Space"}
-      {activeAsset === "structure.json" && "Spatial Graph"}
-    </motion.div>
-  </div>
-</div>
-
-            <div className="col-span-3 p-6">
-              <div className="mb-6 text-xs uppercase tracking-[0.2em] text-white/30">
-                Analysis
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <div className="mb-2 text-sm text-white/40">
-                    {activeAnalysis.title}
-                  </div>
-                  <div className="text-sm text-white">
-                    {activeAnalysis.value}
-                  </div>
+              <div className="pointer-events-none absolute left-5 top-5 z-20 max-w-[280px]">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">
+                  decorative figure
                 </div>
-
-                <div>
-                  <div className="mb-2 text-sm text-white/40">
-                    {activeAnalysis.scoreLabel}
-                  </div>
-                  <div className="text-sm text-white">
-                    {activeAnalysis.score}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-2 text-sm text-white/40">
-                    Embedding Space
-                  </div>
-
-                  <motion.div
-                    key={activeAsset}
-                    initial={{
-                      opacity: 0,
-                      scale: 0.96,
-                      filter: "blur(12px)"
-                    }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      filter: "blur(0px)"
-                    }}
-                    transition={{
-                      duration: 1.2,
-                      ease: [0.22, 1, 0.36, 1]
-                    }}
-                    className="flex h-24 items-center rounded-2xl bg-gradient-to-br from-cyan-500/10 to-purple-500/10 px-4 text-xs text-white/40"
-                  >
-                    {activeAnalysis.space}
-                  </motion.div>
+                <div className="mt-1 text-[13.5px] leading-snug text-ink">
+                  Same scene for every asset.
                 </div>
               </div>
+
+              <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted">
+                pointer perturbs the cloud
+              </div>
+            </div>
+
+            {/* analysis */}
+            <div className="col-span-12 p-6 md:col-span-3 md:px-7">
+              <div className="eyebrow mb-4">About this structure</div>
+
+              <motion.div
+                key={activeAsset.pdb}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45 }}
+                className="space-y-5"
+              >
+                <Row label="Name">
+                  <span className="text-[14px] text-ink">{activeAsset.name}</span>
+                </Row>
+
+                <Row label="Fold">
+                  <span className="text-[13.5px] text-ink-soft">
+                    {activeAsset.fold}
+                  </span>
+                </Row>
+
+                <Row label="Residues">
+                  <span className="font-mono text-[12.5px] text-ink-soft tnum">
+                    {activeAsset.residueRange}
+                  </span>
+                  <span className="ml-2 font-mono text-[11px] text-muted tnum">
+                    n = {activeAsset.residueCount}
+                  </span>
+                </Row>
+
+                <Row label="Identifiers">
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="chip-id">PDB {activeAsset.pdb}</span>
+                    <span className="chip-id">UP {activeAsset.uniprot}</span>
+                    {activeAsset.pfam ? (
+                      <span className="chip-id">{activeAsset.pfam}</span>
+                    ) : null}
+                    {activeAsset.ec ? (
+                      <span className="chip-id">{activeAsset.ec}</span>
+                    ) : null}
+                  </div>
+                </Row>
+
+                <Row label="Why this one">
+                  <span className="text-[13px] leading-[1.6] text-muted-strong">
+                    {activeAsset.note}
+                  </span>
+                </Row>
+              </motion.div>
             </div>
           </div>
+
+          <div className="border-t border-line bg-paper-soft/60 px-5 py-3 text-[12.5px] leading-[1.55] text-muted-strong">
+            The 3D scene is decorative. It does not change with the selected
+            structure and does not reflect any real embedding. I&apos;ll wire it
+            to actual data when there is some.
+          </div>
         </motion.div>
-      </section>
-    </main>
+      </div>
+    </section>
+  );
+}
+
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">
+        {label}
+      </div>
+      <div className="mt-1.5">{children}</div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function Plan() {
+  return (
+    <section id="plan" className="border-t border-line bg-paper-soft/40 py-20">
+      <div className="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[160px_1fr]">
+        <div className="eyebrow pt-2">The plan</div>
+        <div className="max-w-2xl space-y-7">
+          <p className="text-[15.5px] leading-[1.75] text-ink-soft">
+            Roughly in order. I&apos;ll keep this section honest about
+            what&apos;s actually started vs. just intended.
+          </p>
+          <ol className="space-y-6">
+            {PLAN.map((step, index) => (
+              <li
+                key={step.label}
+                className="grid grid-cols-[44px_1fr] items-baseline gap-4"
+              >
+                <span className="font-mono text-[12px] tracking-[0.02em] text-brand">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <div className="font-serif text-[19px] leading-snug tracking-[-0.015em] text-ink">
+                    {step.label}
+                  </div>
+                  <p className="mt-1 text-[14px] leading-[1.65] text-muted-strong">
+                    {step.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function Repo() {
+  return (
+    <section id="repo" className="border-t border-line py-20">
+      <div className="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[160px_1fr]">
+        <div className="eyebrow pt-2">Open source</div>
+        <div className="max-w-2xl space-y-6">
+          <p className="text-[15.5px] leading-[1.75] text-ink-soft">
+            The repo is on GitHub under MIT. Star it if you want to follow
+            along — I&apos;m more likely to keep going if there are people
+            watching. If you spot something off, open an issue.
+          </p>
+          <div className="card flex flex-wrap items-center justify-between gap-4 p-5">
+            <div className="flex items-center gap-2">
+              <GitHubMark />
+              <span className="font-mono text-[12.5px] tracking-[0.01em] text-ink">
+                EthanXie-Hub / spatium-bio
+              </span>
+              <span className="chip-id">main</span>
+              <span className="chip-id">MIT</span>
+            </div>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ink"
+            >
+              <GitHubMark /> Star on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+function Footer() {
+  return (
+    <footer className="border-t border-line py-12">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="font-serif text-[19px] tracking-[-0.018em] text-ink">
+            Spatium Bio
+          </div>
+          <div className="mt-1 text-[13px] text-muted-strong">
+            Built by Ethan Xie. Solo, in public.
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted-strong">
+          <a
+            href="mailto:nyssa520ethan@gmail.com"
+            className="hover:text-ink"
+          >
+            nyssa520ethan@gmail.com
+          </a>
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-ink"
+          >
+            github
+          </a>
+          <a
+            href={`${GITHUB_URL}/blob/main/LICENSE`}
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-ink"
+          >
+            MIT
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function GitHubMark() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.55v-1.9c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.11v3.13c0 .3.21.66.8.55A11.5 11.5 0 0 0 12 .5Z" />
+    </svg>
   );
 }

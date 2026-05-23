@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# `apps/web`
 
-## Getting Started
+The Next.js landing page for Spatium Bio. Today it's a UI, not a working
+science stack — see the [root README](../../README.md) for what is and
+isn't built.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+npm run build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Node 20+ recommended.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── layout.tsx           Metadata, fonts, OG plumbing
+│   ├── page.tsx             Single-page workspace
+│   ├── opengraph-image.tsx  Generated 1200×630 OG card
+│   ├── icon.tsx             Favicon glyph
+│   └── globals.css          Paper-grade design tokens
+└── components/
+    └── protein-scene.tsx    Decorative R3F figure
+```
 
-## Learn More
+## Design tokens
 
-To learn more about Next.js, take a look at the following resources:
+Inherited from FIELD｜场域:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Token        | Value     | Use                              |
+| ------------ | --------- | -------------------------------- |
+| `paper`      | `#F6F3EE` | Background                       |
+| `ink`        | `#1F1E1B` | Primary text                     |
+| `muted`      | `#6B6760` | Secondary text                   |
+| `line`       | `#E9E2D2` | Hairline borders                 |
+| `brand`      | `#C15F3C` | The single accent                |
+| `brand.ink`  | `#8A3F23` | Brand text on warm backgrounds   |
+| `brand.soft` | `#F2E5DC` | Selection, active surfaces       |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Source Serif 4 for display, Inter for UI, Geist Mono for identifiers.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](../../LICENSE).

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling / dev configs
+.claude/
+
+# stale nested monorepo copy (untracked, kept locally only)
+/apps/

@@ -1,26 +1,224 @@
 @import "tailwindcss";
 
+/*
+  Spatium Bio — paper-grade visual system, aligned with FIELD｜场域.
+  Foundation: warm cream paper, near-black ink, brick-orange as the
+  single accent. Reserved for: active state, key data, citation marks.
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f6f3ee;
+  --paper-soft: #efece5;
+  --ink: #1f1e1b;
+  --ink-soft: #2a2926;
+  --muted: #6b6760;
+  --muted-strong: #4a4742;
+  --line: #e9e2d2;
+  --line-soft: #efe9dc;
+  --brand: #c15f3c;
+  --brand-ink: #8a3f23;
+  --brand-soft: #f2e5dc;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-paper-soft: var(--paper-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+
+  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-serif), "Source Serif 4", "Tiempos Text", Georgia, serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Paper grain — fixed multiply overlay, very subtle. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+}
+
+::selection {
+  background: var(--brand-soft);
+  color: var(--ink);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: -0.018em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "ss01", "zero", "tnum";
+}
+
+.hairline {
+  border-color: var(--line);
+}
+
+.hairline-soft {
+  border-color: var(--line-soft);
+}
+
+/* Tabular figures for scientific numerals */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Refined ink button — paper-grade contrast, not pure black */
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.btn-ink:hover {
+  opacity: 0.88;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.btn-ghost:hover {
+  background: var(--paper-soft);
+  border-color: #ddd5c2;
+}
+
+/* Identifier chip — for PDB / UniProt / EC numbers */
+.chip-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbf9f4;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--muted-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.chip-id .chip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+.chip-id--active {
+  border-color: rgba(193, 95, 60, 0.42);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+.chip-id--active .chip-dot {
+  background: var(--brand);
+}
+
+/* Section eyebrow label — small caps style */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Footnote marker — superscript brick-orange */
+.fn {
+  color: var(--brand);
+  font-size: 0.72em;
+  vertical-align: super;
+  line-height: 0;
+  font-family: var(--font-mono);
+  padding-left: 1px;
+}
+
+/* Hairline divider with a tick mark feel */
+.rule {
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+
+/* pLDDT-style confidence bar */
+.plddt-bar {
+  height: 4px;
+  background: var(--line-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.plddt-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+  border-radius: 999px;
+}
+
+/* Card surface — paper, soft hairline, no harsh shadow */
+.card {
+  background: #fbf9f4;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+/* Reduce motion friendliness */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
