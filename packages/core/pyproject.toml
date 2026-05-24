@@ -1,6 +1,6 @@
 [project]
 name = "spatium-bio"
-version = "0.0.1"
+version = "0.1.0"
 description = "Core library for Spatium Bio — protein I/O, embeddings, and manifold operators."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -23,6 +23,8 @@ dependencies = [
   "matplotlib>=3.8",
   "numpy>=1.26",
   "requests>=2.31",
+  "torch>=2.2",
+  "transformers>=4.40",
 ]
 
 [project.urls]

@@ -67,34 +67,34 @@ const ASSETS: Asset[] = [
 const I_HAVE = [
   "A landing page and design system",
   "A static 3D figure (R3F)",
-  "A Python core package — PDB fetch / parse / Cα extraction, with tests",
+  "A Python core package — PDB I/O + ESM-2 embeddings + cosine similarity, with tests",
   "A reproducible hello-protein script (4HHB → Cα distance map)",
-  "A reading list I'm working through (docs/reading-list.md)",
+  "A 3-protein sanity check — paralogs cluster (0.978), unrelated enzyme separates (~0.70)",
+  "A build log of what I'm learning (docs/notes/)",
   "An open repo, MIT-licensed",
 ];
 
 const I_DONT_HAVE = [
-  "An encoder",
-  "Real per-residue embeddings",
-  "A manifold or projection",
-  "Function or fold-similarity readouts",
+  "A trained or fine-tuned encoder of my own (using ESM-2 35M as-is)",
+  "A manifold or projection over embeddings (UMAP / PCA)",
+  "Function or fold-similarity readouts at scale",
   "Generation / sampling",
-  "Any benchmark results",
+  "Any benchmark on more than 3 proteins",
   "A public API",
 ];
 
 const PLAN = [
   {
-    label: "Encoder",
-    body: "Per-residue embeddings via the ESM-2 family. Wire it up locally first, then expose as a CLI.",
+    label: "Encoder · in",
+    body: "ESM-2 35M wired up locally; mean-pooled cosine similarity working on a 3-protein sanity check. Next: try the 650M model and expose a small CLI.",
   },
   {
-    label: "Manifold",
-    body: "A learned metric over residue topology so that nearby points share fold and contact pattern.",
+    label: "Manifold · next",
+    body: "Start with off-the-shelf UMAP / PCA over a few hundred ESM-2 embeddings before training anything custom.",
   },
   {
-    label: "Operators",
-    body: "Fold-similarity retrieval and function readouts. Generation comes last, once the metric is stable.",
+    label: "Operators · later",
+    body: "Fold-similarity retrieval and function readouts. Generation last, once the metric is stable.",
   },
 ];
 

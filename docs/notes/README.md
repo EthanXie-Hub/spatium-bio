@@ -1,39 +1,45 @@
-# `docs/notes/` — learning log
+# `docs/notes/` — build log
 
-These notes are not academic paper reviews. I am a designer learning
-computational biology from outside the field. What I'm tracking here is
-my own understanding, honestly, including what I don't get yet.
+A running log of what I built, what surprised me, and what I learned
+along the way. I am a designer learning computational biology as a
+hobby — these notes are honest write-ups of the actual process, not
+academic reviews.
+
+The earlier plan was to read five papers up front and write a "paper
+note" for each. I decided to flip it: build first, read when the code
+forces me to.
 
 ## Convention
 
-| File | When to write it |
-| ---- | ---------------- |
-| `L0-01-alphafold2.md` | After reading paper #1 from the reading list |
-| `L0-02-esm2.md`       | After reading paper #2 |
-| `L0-03-scope.md`      | After reading paper #3 |
-| `L0-04-tm-score.md`   | After reading paper #4 |
-| `L0-05-bepler-berger.md` | After reading paper #5 |
-| `L0-summary.md`       | After all five — the L0 graduation cert |
+Entries are dated and titled by what I was trying to do that day.
 
-One file per paper. Use [`_template.md`](_template.md) as the starting
-point. Keep each note to one or two screens; if it grows longer, I'm
-probably writing for an imagined reviewer instead of for myself.
+```
+L1-2026-05-24-first-esm2-embedding.md
+L1-2026-05-31-mps-vs-cpu-throughput.md
+L2-2026-06-15-scope-fold-classes.md
+```
 
-## What "honest" means here
+One entry per session of work or one self-contained learning moment.
+Anything I read because the code forced me to also lands here, with a
+note on what specific problem made me reach for it.
 
-- Plain language. No jargon I cannot define on the spot.
-- "I don't understand X" is more valuable than pretending to. The gap
-  list is the most important section — it becomes my future reading.
-- No paper-evaluating claims ("the authors elegantly demonstrate…").
-  I cannot evaluate a 2021 *Nature* paper yet, and pretending to
-  reads as the kind of AI tone I'm trying to keep out of this project.
-- First person. If a sentence sounds like a textbook, rewrite it.
+See [`_template.md`](_template.md) for the entry shape.
 
-## What "good enough" looks like
+## What goes in an entry
 
-A note is done when I can hand it to a non-biology friend and they get
-the rough idea of what the paper does without me explaining anything
-verbally.
+- What I tried to do
+- What actually happened
+- Where I got stuck and what I had to look up
+- A one-sentence takeaway
 
-That is a much harder bar than "I read the paper" and is the entire
-point of writing the notes.
+If I want to write more than that, I'm probably writing for an
+imagined reader instead of for me — keep it short.
+
+## What stays out
+
+- Marketing copy. The website is the marketing copy.
+- Anything that pretends I understand more than I do.
+- "Paper-review" voice. I am not a reviewer.
+
+The entries are most useful when they are slightly embarrassing — the
+moments where I got something wrong are the moments worth remembering.

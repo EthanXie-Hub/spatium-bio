@@ -7,6 +7,7 @@ runnable in CI later.
 | # | Script | What it does | Needs network |
 | - | ------ | ------------ | ------------- |
 | 00 | [`00_hello_protein.py`](00_hello_protein.py) | Fetch 4HHB, plot Cα distance map | first run only |
+| 01 | [`01_embed_and_compare.py`](01_embed_and_compare.py) | Embed 3 proteins with ESM-2 35M, plot cosine similarity matrix | first run only (~150MB model) |
 
 ## Run
 
