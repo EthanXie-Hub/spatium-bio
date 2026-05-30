@@ -1,12 +1,12 @@
-# Reading list — L0
+# Reading list
 
-Five papers I plan to read before writing any embedding code. The point of
-this list isn't completeness; it's to have read enough that I know what
-the rest of the field has *already* answered before I propose anything
-of my own.
+Five papers I started lining up at L0. I ended up flipping the order:
+L1 went first (wired ESM-2 35M as-is for a sanity check), and this list
+is now used to guide L2 — every paper has at least one concrete decision
+attached to the L2 plan (which dataset, which metric, which baseline).
 
-I will check each off after I've read it and written one paragraph on
-"what I now understand" in `docs/notes/`.
+Notes I write while reading land in `docs/notes/` using the build-log
+template.
 
 ## Order
 
@@ -38,9 +38,10 @@ that changed in 2021.
 > Code + pretrained weights (use this when reading the paper, not
 > after): <https://github.com/facebookresearch/esm>
 
-The protein language model I will most likely use to produce per-residue
-embeddings (1,280-d for the 650M variant). Understanding the training
-objective and the embedding geometry is non-negotiable before L1.
+The protein language model I am already using as-is for L1 (35M, 480-d)
+and will most likely upgrade to for L2 (650M, 1,280-d). Understanding
+the training objective and the embedding geometry is required reading
+before I claim anything quantitative about the embedding space.
 
 ### 3. SCOPe / CATH — how the field organises fold space
 
@@ -95,8 +96,9 @@ L2 / L3 readouts.
 
 Once these five are read I will:
 
-1. Write a `docs/notes/L0-summary.md` (one page, my own words).
-2. Pick the specific encoder + benchmark combination for L1 in the open.
+1. Pick the specific dataset + benchmark combination for L2 (most
+   likely a small SCOPe subset evaluated against ESM-2 cosine).
+2. Write an L2 plan in `docs/notes/` before I touch the code.
 3. Update `apps/web` page's "What I don't have" list as items move.
 
 If you have suggestions, please open an issue or email — I would

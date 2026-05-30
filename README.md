@@ -12,9 +12,12 @@ I want to use as I learn — eventually, a single coordinate system where
 structure retrieval, function readouts, and generative sampling share one
 manifold.
 
-Today it is a Next.js landing page and a decorative 3D figure. None of the
-science is wired up yet. I'm shipping it early because building in public
-is more honest than building in secret.
+Today there is a minimal Python core (PDB I/O, ESM-2 35M sequence
+embeddings, mean-pooled cosine similarity sanity check) and a Next.js
+landing page with a decorative 3D figure. There is no manifold yet, no
+scale benchmark, no function/fold readouts, and no generation. I'm
+shipping it early because building in public is more honest than building
+in secret.
 
 ## What works · what doesn't
 
@@ -26,12 +29,13 @@ is more honest than building in secret.
 - Python core package `spatium-bio`:
   - PDB I/O — fetch / parse / Cα extraction (`spatium_bio.io`)
   - ESM-2 embeddings — per-residue, mean-pool, cosine similarity (`spatium_bio.embed`)
-  - 15 tests passing (11 offline + 4 network)
+  - 15 tests passing (13 offline + 2 network)
 - Reproducible hello-protein script — 4HHB → Cα distance map
   (`examples/00_hello_protein.py`)
-- Reproducible embed-and-compare script — 3 proteins, paralogs cluster
-  (Hb α–β = 0.978), unrelated enzyme separates (Hb–AdK ≈ 0.70)
-  (`examples/01_embed_and_compare.py`)
+- Reproducible embed-and-compare script — Hb α–β cosine (0.978) is
+  higher than Hb–AdK cosine (≈ 0.70) in a 3-sequence sanity check
+  (`examples/01_embed_and_compare.py`,
+  `examples/results/01_esm2_cosine_similarity.json`)
 - Build log of what I'm learning (`docs/notes/`)
 - Repo + MIT license
 

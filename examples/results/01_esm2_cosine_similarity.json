@@ -1,0 +1,82 @@
+{
+  "$schema_note": "Hand-written artifact paired with examples/01_embed_and_compare.py and examples/figures/01_esm2_cosine_similarity.png. Schema is intentionally minimal until there is a second experiment to standardise against.",
+  "experiment": "01_esm2_cosine_similarity",
+  "date": "2026-05-30",
+  "produced_by": "examples/01_embed_and_compare.py",
+  "spatium_bio_version": "0.1.0",
+  "model": {
+    "name": "facebook/esm2_t12_35M_UR50D",
+    "params": "35M",
+    "hidden_size": 480,
+    "source": "huggingface transformers AutoModel"
+  },
+  "embedding": {
+    "input": "amino acid sequence (single chain)",
+    "output": "per-residue final hidden states, then mean-pooled across residues",
+    "special_tokens_stripped": true,
+    "device": "cpu",
+    "dtype": "float32"
+  },
+  "metric": {
+    "name": "cosine_similarity",
+    "definition": "dot(a, b) / (norm(a) * norm(b)) on mean-pooled embeddings",
+    "range": [-1.0, 1.0]
+  },
+  "targets": [
+    {
+      "label": "Hb_alpha",
+      "name": "Hemoglobin alpha chain",
+      "pdb": "4HHB",
+      "chain": "A",
+      "uniprot": "P69905",
+      "organism": "H. sapiens",
+      "n_residues": 141
+    },
+    {
+      "label": "Hb_beta",
+      "name": "Hemoglobin beta chain",
+      "pdb": "4HHB",
+      "chain": "B",
+      "uniprot": "P68871",
+      "organism": "H. sapiens",
+      "n_residues": 146
+    },
+    {
+      "label": "AdK",
+      "name": "Adenylate kinase",
+      "pdb": "1AKE",
+      "chain": "A",
+      "uniprot": "P69441",
+      "organism": "E. coli",
+      "n_residues": 214
+    }
+  ],
+  "cosine_similarity_matrix": {
+    "rows": ["Hb_alpha", "Hb_beta", "AdK"],
+    "cols": ["Hb_alpha", "Hb_beta", "AdK"],
+    "values": [
+      [1.0000, 0.9781, 0.6926],
+      [0.9781, 1.0000, 0.7078],
+      [0.6926, 0.7078, 1.0000]
+    ]
+  },
+  "observations": [
+    "Hb alpha vs Hb beta (paralogs): 0.9781 — closer than either pair vs adenylate kinase.",
+    "Hb alpha vs adenylate kinase: 0.6926.",
+    "Hb beta vs adenylate kinase: 0.7078.",
+    "The Hb-paralog cosine sits roughly 0.28 above the Hb-vs-AdK cosines."
+  ],
+  "what_this_shows": [
+    "Off-the-shelf ESM-2 35M mean-pooled embeddings preserve enough signal to rank a paralog above an unrelated enzyme on three sequences.",
+    "The script asserts the ordering (Hb alpha-beta > Hb-AdK), not magnitudes."
+  ],
+  "what_this_does_not_show": [
+    "It is not a fold-recognition benchmark. n = 3 sequences is far too small to claim anything about fold space.",
+    "Mean-pooling discards positional structure; per-residue or attention-aware probes may give very different rankings.",
+    "Cosine similarity in ESM-2 space is empirically squeezed into a narrow band; differences should not be interpreted as probabilities.",
+    "No comparison to TM-score, no comparison to baselines (random vectors, k-mer counts, BLOSUM), no error bars."
+  ],
+  "reproduce": "uv run --project packages/core python examples/01_embed_and_compare.py",
+  "figure": "examples/figures/01_esm2_cosine_similarity.png",
+  "note": "Values are taken directly from the script's reported output on first run (printed to stdout). They are exact to the precision shown; the script prints 4-decimal formatting. If a future rerun changes them due to library version drift, this file should be regenerated."
+}

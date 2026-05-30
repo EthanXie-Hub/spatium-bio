@@ -69,7 +69,7 @@ const I_HAVE = [
   "A static 3D figure (R3F)",
   "A Python core package — PDB I/O + ESM-2 embeddings + cosine similarity, with tests",
   "A reproducible hello-protein script (4HHB → Cα distance map)",
-  "A 3-protein sanity check — paralogs cluster (0.978), unrelated enzyme separates (~0.70)",
+  "A 3-sequence ESM-2 sanity check — Hb α–β closer (0.978) than Hb–AdK (~0.70)",
   "A build log of what I'm learning (docs/notes/)",
   "An open repo, MIT-licensed",
 ];
@@ -86,7 +86,7 @@ const I_DONT_HAVE = [
 const PLAN = [
   {
     label: "Encoder · in",
-    body: "ESM-2 35M wired up locally; mean-pooled cosine similarity working on a 3-protein sanity check. Next: try the 650M model and expose a small CLI.",
+    body: "ESM-2 35M used as-is (not custom-trained); mean-pooled sequence embeddings; cosine similarity validated on a 3-sequence sanity check. Next: 650M model + a small CLI.",
   },
   {
     label: "Manifold · next",
@@ -169,10 +169,11 @@ function Hero() {
         </h1>
 
         <p className="mt-8 max-w-xl text-[17px] leading-[1.65] text-muted-strong">
-          I&apos;m building a workspace that treats proteins as points in a
-          learned space — where retrieval, function, and generation share a
-          single manifold. The UI is what I&apos;m sure about. The science is
-          what I&apos;m learning.
+          I&apos;m building a workspace where proteins live as points in a
+          shared space — eventually with retrieval, function, and generation
+          on a single manifold. Today the pipeline reaches sequence
+          embeddings and stops. The UI is what I&apos;m sure about. The
+          science is what I&apos;m learning.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -207,10 +208,11 @@ function Why() {
             honest one.
           </p>
           <p>
-            Right now this is mostly a UI. The encoder isn&apos;t trained, the
-            manifold isn&apos;t built, the readouts don&apos;t exist. I&apos;m
-            shipping it early because watching the gap close in public is more
-            honest than waiting until it&apos;s &ldquo;done.&rdquo;
+            Right now the pipeline reaches sequence embeddings via ESM-2
+            (used as-is, not custom-trained). The manifold isn&apos;t built.
+            The readouts don&apos;t exist. I&apos;m shipping it early because
+            watching the gap close in public is more honest than waiting
+            until it&apos;s &ldquo;done.&rdquo;
           </p>
           <p className="text-muted-strong">
             If you&apos;re in the field and any of this sounds wrong, please
@@ -297,7 +299,8 @@ function Figure({
           <p className="max-w-2xl text-[14.5px] leading-[1.65] text-muted-strong">
             This is the shape of the workspace I&apos;m building toward. The
             assets are real PDB structures I want to support; the 3D figure is
-            a decorative placeholder until I have an encoder to drive it.
+            a decorative placeholder until embeddings or manifold data drive
+            it.
           </p>
         </div>
 
@@ -441,7 +444,7 @@ function Figure({
           <div className="border-t border-line bg-paper-soft/60 px-5 py-3 text-[12.5px] leading-[1.55] text-muted-strong">
             The 3D scene is decorative. It does not change with the selected
             structure and does not reflect any real embedding. I&apos;ll wire it
-            to actual data when there is some.
+            to actual data when the data path is wired into the UI.
           </div>
         </motion.div>
       </div>

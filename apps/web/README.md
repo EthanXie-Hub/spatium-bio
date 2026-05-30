@@ -1,8 +1,9 @@
 # `apps/web`
 
-The Next.js landing page for Spatium Bio. Today it's a UI, not a working
-science stack — see the [root README](../../README.md) for what is and
-isn't built.
+The Next.js landing page for Spatium Bio. This sub-package is the UI,
+not yet a full science stack — the root repo already ships a minimal
+Python core (`packages/core`, see [root README](../../README.md)), but
+none of it is wired into this web app yet.
 
 ## Run
 
