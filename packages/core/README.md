@@ -10,13 +10,29 @@ via ESM-2. Everything else lives in the road map.
 | ------ | ------- |
 | `spatium_bio.io` | Fetch / parse PDB, extract chain Cα, compute distance matrix |
 | `spatium_bio.embed` | Load ESM-2, embed a sequence, mean-pool, cosine similarity |
+| `spatium_bio.compare` | Run an embed-and-compare experiment over a targets manifest |
+| `spatium_bio.plot` | Render a cosine-similarity matrix figure |
+| `spatium_bio.cli` | `spatium-bio` command-line entry point |
 
 ## What isn't (and what each gap blocks)
 
 - `manifold.py` — no learned space over embeddings yet, no retrieval / clustering
 - `readouts.py` — no function or fold-similarity head
-- `cli.py` — no entry point yet; importable Python only
 - No fine-tuned or custom-trained encoder; ESM-2 35M is used as-is
+
+## CLI
+
+```bash
+spatium-bio --help
+spatium-bio embed-compare \
+  --targets examples/data/targets_l2prep.json \
+  --out result.json \
+  --figure result.png
+```
+
+A targets manifest is `{"targets": [{"id", "pdb", "chain", "family", "label"}, ...]}`.
+Everything else (sequence, residue count, RCSB title) is derived from the
+fetched structure, so the only human assertions are `family` and `label`.
 
 ## Develop
 

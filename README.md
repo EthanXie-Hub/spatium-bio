@@ -29,13 +29,20 @@ in secret.
 - Python core package `spatium-bio`:
   - PDB I/O — fetch / parse / Cα extraction (`spatium_bio.io`)
   - ESM-2 embeddings — per-residue, mean-pool, cosine similarity (`spatium_bio.embed`)
-  - 15 tests passing (13 offline + 2 network)
+  - embed-and-compare pipeline over a targets manifest, emitting a JSON
+    artifact with full provenance (`spatium_bio.compare`)
+  - a `spatium-bio embed-compare` CLI
+  - 27 tests passing (24 offline + 3 network)
 - Reproducible hello-protein script — 4HHB → Cα distance map
   (`examples/00_hello_protein.py`)
 - Reproducible embed-and-compare script — Hb α–β cosine (0.978) is
   higher than Hb–AdK cosine (≈ 0.70) in a 3-sequence sanity check
-  (`examples/01_embed_and_compare.py`,
-  `examples/results/01_esm2_cosine_similarity.json`)
+  (`examples/01_embed_and_compare.py`)
+- A 12-sequence family-separation run as L2 prep — within-family cosine
+  (globin 0.976) sits above the across-family mean (≈ 0.73); see the
+  honest caveats in `examples/data/targets_l2prep.json`
+  (`examples/02_family_separation.py`)
+- Result artifacts auto-written under `examples/results/`
 - Build log of what I'm learning (`docs/notes/`)
 - Repo + MIT license
 
@@ -45,7 +52,8 @@ in secret.
 - A manifold or projection over embeddings (UMAP / PCA)
 - Function or fold-similarity readouts at scale
 - Generation / sampling
-- Any benchmark on more than 3 proteins
+- A real benchmark — the 12-sequence run has redundant members and no
+  baseline; it proves the pipeline, not the science
 - A public API
 
 I'll update both lists as things move.

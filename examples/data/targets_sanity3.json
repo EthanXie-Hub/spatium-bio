@@ -1,0 +1,8 @@
+{
+  "_about": "The original 3-sequence sanity check from L1, now expressed as a manifest. Two hemoglobin paralogs (globin family) plus one unrelated enzyme. 'family' and 'label' are curator assertions; everything else is derived from the fetched structure at run time.",
+  "targets": [
+    { "id": "Hb_alpha", "pdb": "4HHB", "chain": "A", "family": "globin", "label": "Hb α" },
+    { "id": "Hb_beta",  "pdb": "4HHB", "chain": "B", "family": "globin", "label": "Hb β" },
+    { "id": "AdK",       "pdb": "1AKE", "chain": "A", "family": "other",  "label": "AdK" }
+  ]
+}

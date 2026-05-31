@@ -4,9 +4,12 @@ Today this package handles:
 
 - protein I/O — fetch from RCSB, parse PDB, extract Cα coordinates
 - embeddings — per-residue ESM-2 embeddings + cosine similarity helpers
+- compare — run an embed-and-compare experiment over a targets manifest
 
 Manifold and readout operators land here once they exist.
 """
+
+__version__ = "0.2.0"
 
 from spatium_bio.embed import (
     DEFAULT_MODEL,
@@ -35,5 +38,3 @@ __all__ = [
     "mean_pool",
     "parse_structure",
 ]
-
-__version__ = "0.1.0"

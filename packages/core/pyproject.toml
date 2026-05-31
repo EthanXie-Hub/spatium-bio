@@ -1,6 +1,6 @@
 [project]
 name = "spatium-bio"
-version = "0.1.0"
+version = "0.2.0"
 description = "Core library for Spatium Bio — protein I/O, embeddings, and manifold operators."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -26,6 +26,9 @@ dependencies = [
   "torch>=2.2",
   "transformers>=4.40",
 ]
+
+[project.scripts]
+spatium-bio = "spatium_bio.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/EthanXie-Hub/spatium-bio"

@@ -1,0 +1,27 @@
+{
+  "_about": "L2-prep sample. A deliberately small, high-confidence set: every 'family' label is textbook-unambiguous, so any mismatch with a target's fetched rcsb_title is a curation bug I want to catch. This is a starting point designed to be extended toward 20-30 once the pipeline is proven. Curator assertions are 'family' and 'label' only.",
+  "_known_limitation": "Redundancy: the three lysozyme_c entries (1HEL/6LYZ/1LYZ) are the SAME protein (hen egg-white lysozyme) in different crystal forms, and the two ubiquitin_like entries (1UBQ/1UBI) are both ubiquitin. Their within-family cosine is therefore trivially ~1.0 and inflates the overall within-family mean. The only family here with genuinely non-redundant members sharing a fold is globin (Hb α / Hb β / myoglobin). A real L2 benchmark must use non-redundant sequences per family; this starter set intentionally keeps the duplicates so the pipeline surfaces the issue.",
+  "_families": {
+    "globin": "all-α heme-binding globin fold",
+    "ubiquitin_like": "β-grasp ubiquitin superfamily",
+    "lysozyme_c": "hen egg-white (c-type) lysozyme — NOT T4/phage lysozyme, which is an unrelated fold",
+    "other": "out-group: each entry is a distinct, unrelated protein"
+  },
+  "targets": [
+    { "id": "Hb_alpha",   "pdb": "4HHB", "chain": "A", "family": "globin",         "label": "Hb α" },
+    { "id": "Hb_beta",    "pdb": "4HHB", "chain": "B", "family": "globin",         "label": "Hb β" },
+    { "id": "Myoglobin",  "pdb": "1MBN", "chain": "A", "family": "globin",         "label": "Mb" },
+
+    { "id": "Ubiquitin",  "pdb": "1UBQ", "chain": "A", "family": "ubiquitin_like", "label": "Ub (1UBQ)" },
+    { "id": "Ubiquitin2", "pdb": "1UBI", "chain": "A", "family": "ubiquitin_like", "label": "Ub (1UBI)" },
+
+    { "id": "Lysozyme_1HEL", "pdb": "1HEL", "chain": "A", "family": "lysozyme_c",  "label": "HEWL (1HEL)" },
+    { "id": "Lysozyme_6LYZ", "pdb": "6LYZ", "chain": "A", "family": "lysozyme_c",  "label": "HEWL (6LYZ)" },
+    { "id": "Lysozyme_1LYZ", "pdb": "1LYZ", "chain": "A", "family": "lysozyme_c",  "label": "HEWL (1LYZ)" },
+
+    { "id": "AdK",          "pdb": "1AKE", "chain": "A", "family": "other",        "label": "AdK" },
+    { "id": "RNaseA",       "pdb": "7RSA", "chain": "A", "family": "other",        "label": "RNase A" },
+    { "id": "Crambin",      "pdb": "1CRN", "chain": "A", "family": "other",        "label": "Crambin" },
+    { "id": "Cytochrome_c", "pdb": "1HRC", "chain": "A", "family": "other",        "label": "Cyt c" }
+  ]
+}
