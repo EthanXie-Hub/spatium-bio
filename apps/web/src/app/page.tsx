@@ -67,9 +67,9 @@ const ASSETS: Asset[] = [
 const I_HAVE = [
   "A landing page and design system",
   "A static 3D figure (R3F)",
-  "A Python core package — PDB I/O + ESM-2 embeddings + cosine similarity, with tests",
-  "A reproducible hello-protein script (4HHB → Cα distance map)",
-  "A 3-sequence ESM-2 sanity check — Hb α–β closer (0.978) than Hb–AdK (~0.70)",
+  "A Python core package (spatium_bio) — PDB I/O, ESM-2 embeddings, cosine similarity, with a CLI and tests",
+  "A reusable embed-compare pipeline: manifest → PDB fetch → ESM-2 → cosine matrix → JSON/figure, with full provenance",
+  "Reproducible runs — a Cα distance map, a 3-sequence sanity check (Hb α–β 0.978 > Hb–AdK ~0.70), and a 12-sequence family-separation prep — the comparison runs prove the pipeline, not the science",
   "A build log of what I'm learning (docs/notes/)",
   "An open repo, MIT-licensed",
 ];
@@ -79,18 +79,22 @@ const I_DONT_HAVE = [
   "A manifold or projection over embeddings (UMAP / PCA)",
   "Function or fold-similarity readouts at scale",
   "Generation / sampling",
-  "Any benchmark on more than 3 proteins",
+  "A real benchmark — the 12-sequence run has duplicate sequences and no baseline",
   "A public API",
 ];
 
 const PLAN = [
   {
     label: "Encoder · in",
-    body: "ESM-2 35M used as-is (not custom-trained); mean-pooled sequence embeddings; cosine similarity validated on a 3-sequence sanity check. Next: 650M model + a small CLI.",
+    body: "ESM-2 35M used as-is (not custom-trained); mean-pooled sequence embeddings and cosine similarity, wrapped in a reusable embed-compare CLI and pipeline.",
   },
   {
-    label: "Manifold · next",
-    body: "Start with off-the-shelf UMAP / PCA over a few hundred ESM-2 embeddings before training anything custom.",
+    label: "Benchmark · next",
+    body: "Rebuild the family sample with non-redundant members (the current 12-sequence set has duplicate sequences), add baselines such as random vectors or k-mer similarity, and only compare 35M vs 650M once the sample design is clean.",
+  },
+  {
+    label: "Manifold · later",
+    body: "Off-the-shelf UMAP / PCA over a few hundred ESM-2 embeddings before training anything custom.",
   },
   {
     label: "Operators · later",
