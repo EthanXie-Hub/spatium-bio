@@ -1,0 +1,377 @@
+{
+  "experiment": "embed_compare",
+  "provenance": {
+    "timestamp_utc": "2026-05-31T04:49:54+00:00",
+    "git_commit": "c3390f3",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "device": "cpu",
+    "model": "facebook/esm2_t12_35M_UR50D",
+    "versions": {
+      "python": "3.12.11",
+      "spatium_bio": "0.2.0",
+      "numpy": "2.4.6",
+      "torch": "2.12.0",
+      "transformers": "5.9.0"
+    }
+  },
+  "embedding": {
+    "method": "ESM-2 per-residue final hidden states, mean-pooled",
+    "metric": "cosine_similarity"
+  },
+  "targets": [
+    {
+      "id": "Hb_alpha",
+      "label": "Hb \u03b1",
+      "family": "globin",
+      "pdb": "4HHB",
+      "chain": "A",
+      "n_residues": 141,
+      "embedding_dim": 480,
+      "rcsb_title": "the crystal structure of human deoxyhaemoglobin at 1.74 angstroms resolution"
+    },
+    {
+      "id": "Hb_beta",
+      "label": "Hb \u03b2",
+      "family": "globin",
+      "pdb": "4HHB",
+      "chain": "B",
+      "n_residues": 146,
+      "embedding_dim": 480,
+      "rcsb_title": "the crystal structure of human deoxyhaemoglobin at 1.74 angstroms resolution"
+    },
+    {
+      "id": "Myoglobin",
+      "label": "Mb",
+      "family": "globin",
+      "pdb": "1MBN",
+      "chain": "A",
+      "n_residues": 153,
+      "embedding_dim": 480,
+      "rcsb_title": "the stereochemistry of the protein myoglobin"
+    },
+    {
+      "id": "Ubiquitin",
+      "label": "Ub (1UBQ)",
+      "family": "ubiquitin_like",
+      "pdb": "1UBQ",
+      "chain": "A",
+      "n_residues": 76,
+      "embedding_dim": 480,
+      "rcsb_title": "structure of ubiquitin refined at 1.8 angstroms resolution"
+    },
+    {
+      "id": "Ubiquitin2",
+      "label": "Ub (1UBI)",
+      "family": "ubiquitin_like",
+      "pdb": "1UBI",
+      "chain": "A",
+      "n_residues": 76,
+      "embedding_dim": 480,
+      "rcsb_title": "synthetic structural and biological studies of the ubiquitin system. part 1"
+    },
+    {
+      "id": "Lysozyme_1HEL",
+      "label": "HEWL (1HEL)",
+      "family": "lysozyme_c",
+      "pdb": "1HEL",
+      "chain": "A",
+      "n_residues": 129,
+      "embedding_dim": 480,
+      "rcsb_title": "structural and thermodynamic analysis of compensating mutations within the core of chicken egg white lysozyme"
+    },
+    {
+      "id": "Lysozyme_6LYZ",
+      "label": "HEWL (6LYZ)",
+      "family": "lysozyme_c",
+      "pdb": "6LYZ",
+      "chain": "A",
+      "n_residues": 129,
+      "embedding_dim": 480,
+      "rcsb_title": "real-space refinement of the structure of hen egg-white lysozyme"
+    },
+    {
+      "id": "Lysozyme_1LYZ",
+      "label": "HEWL (1LYZ)",
+      "family": "lysozyme_c",
+      "pdb": "1LYZ",
+      "chain": "A",
+      "n_residues": 129,
+      "embedding_dim": 480,
+      "rcsb_title": "real-space refinement of the structure of hen egg-white lysozyme"
+    },
+    {
+      "id": "AdK",
+      "label": "AdK",
+      "family": "other",
+      "pdb": "1AKE",
+      "chain": "A",
+      "n_residues": 214,
+      "embedding_dim": 480,
+      "rcsb_title": "structure of the complex between adenylate kinase from escherichia coli and the inhibitor ap5a refined at 1.9 angstroms resolution: a model for a catalytic transition state"
+    },
+    {
+      "id": "RNaseA",
+      "label": "RNase A",
+      "family": "other",
+      "pdb": "7RSA",
+      "chain": "A",
+      "n_residues": 124,
+      "embedding_dim": 480,
+      "rcsb_title": "structure of phosphate-free ribonuclease a refined at 1.26 angstroms"
+    },
+    {
+      "id": "Crambin",
+      "label": "Crambin",
+      "family": "other",
+      "pdb": "1CRN",
+      "chain": "A",
+      "n_residues": 46,
+      "embedding_dim": 480,
+      "rcsb_title": "water structure of a hydrophobic protein at atomic resolution. pentagon rings of water molecules in crystals of crambin"
+    },
+    {
+      "id": "Cytochrome_c",
+      "label": "Cyt c",
+      "family": "other",
+      "pdb": "1HRC",
+      "chain": "A",
+      "n_residues": 104,
+      "embedding_dim": 480,
+      "rcsb_title": "high-resolution three-dimensional structure of horse heart cytochrome c"
+    }
+  ],
+  "cosine_similarity_matrix": {
+    "order": [
+      "Hb_alpha",
+      "Hb_beta",
+      "Myoglobin",
+      "Ubiquitin",
+      "Ubiquitin2",
+      "Lysozyme_1HEL",
+      "Lysozyme_6LYZ",
+      "Lysozyme_1LYZ",
+      "AdK",
+      "RNaseA",
+      "Crambin",
+      "Cytochrome_c"
+    ],
+    "values": [
+      [
+        1.0000000000000004,
+        0.9780818007846528,
+        0.9650884329006219,
+        0.7291266045565069,
+        0.7291266045565069,
+        0.690733977770388,
+        0.690733977770388,
+        0.690733977770388,
+        0.6925763145726604,
+        0.9300345305796253,
+        0.8969913850732997,
+        0.5827497825446417
+      ],
+      [
+        0.9780818007846528,
+        1.0,
+        0.9837602056565719,
+        0.7431449917188973,
+        0.7431449917188973,
+        0.71267125399973,
+        0.71267125399973,
+        0.71267125399973,
+        0.7077584611454719,
+        0.9270354022946803,
+        0.9025214047700008,
+        0.6080917971266508
+      ],
+      [
+        0.9650884329006219,
+        0.9837602056565719,
+        1.0,
+        0.746807679068644,
+        0.746807679068644,
+        0.7144603334403056,
+        0.7144603334403056,
+        0.7144603334403056,
+        0.7124868888548928,
+        0.9265818942371775,
+        0.8992522002982418,
+        0.6284330338271635
+      ],
+      [
+        0.7291266045565069,
+        0.7431449917188973,
+        0.746807679068644,
+        1.0,
+        1.0,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.8022704681041478,
+        0.7134377051207293,
+        0.691528790579869,
+        0.6615286852606079
+      ],
+      [
+        0.7291266045565069,
+        0.7431449917188973,
+        0.746807679068644,
+        1.0,
+        1.0,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.8022704681041478,
+        0.7134377051207293,
+        0.691528790579869,
+        0.6615286852606079
+      ],
+      [
+        0.690733977770388,
+        0.71267125399973,
+        0.7144603334403056,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.6936115900778702,
+        0.7378989397327419,
+        0.7475683524009931,
+        0.709301651027696
+      ],
+      [
+        0.690733977770388,
+        0.71267125399973,
+        0.7144603334403056,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.6936115900778702,
+        0.7378989397327419,
+        0.7475683524009931,
+        0.709301651027696
+      ],
+      [
+        0.690733977770388,
+        0.71267125399973,
+        0.7144603334403056,
+        0.6473306352198752,
+        0.6473306352198752,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.9999999999999998,
+        0.6936115900778702,
+        0.7378989397327419,
+        0.7475683524009931,
+        0.709301651027696
+      ],
+      [
+        0.6925763145726604,
+        0.7077584611454719,
+        0.7124868888548928,
+        0.8022704681041478,
+        0.8022704681041478,
+        0.6936115900778702,
+        0.6936115900778702,
+        0.6936115900778702,
+        0.9999999999999998,
+        0.6599784159146951,
+        0.6425524557016422,
+        0.7499770610633012
+      ],
+      [
+        0.9300345305796253,
+        0.9270354022946803,
+        0.9265818942371775,
+        0.7134377051207293,
+        0.7134377051207293,
+        0.7378989397327419,
+        0.7378989397327419,
+        0.7378989397327419,
+        0.6599784159146951,
+        1.0000000000000002,
+        0.9447531583863777,
+        0.5794566171257564
+      ],
+      [
+        0.8969913850732997,
+        0.9025214047700008,
+        0.8992522002982418,
+        0.691528790579869,
+        0.691528790579869,
+        0.7475683524009931,
+        0.7475683524009931,
+        0.7475683524009931,
+        0.6425524557016422,
+        0.9447531583863777,
+        1.0,
+        0.549445769886603
+      ],
+      [
+        0.5827497825446417,
+        0.6080917971266508,
+        0.6284330338271635,
+        0.6615286852606079,
+        0.6615286852606079,
+        0.709301651027696,
+        0.709301651027696,
+        0.709301651027696,
+        0.7499770610633012,
+        0.5794566171257564,
+        0.549445769886603,
+        1.0000000000000002
+      ]
+    ]
+  },
+  "family_summary": {
+    "within_family": {
+      "n": 13,
+      "mean": 0.8502379936477094,
+      "min": 0.549445769886603,
+      "max": 1.0
+    },
+    "across_family": {
+      "n": 53,
+      "mean": 0.726281604732297,
+      "min": 0.5827497825446417,
+      "max": 0.9300345305796253
+    },
+    "per_family_within": {
+      "globin": {
+        "n": 3,
+        "mean": 0.9756434797806155,
+        "min": 0.9650884329006219,
+        "max": 0.9837602056565719
+      },
+      "lysozyme_c": {
+        "n": 3,
+        "mean": 0.9999999999999997,
+        "min": 0.9999999999999998,
+        "max": 0.9999999999999998
+      },
+      "other": {
+        "n": 6,
+        "mean": 0.6876939130130627,
+        "min": 0.549445769886603,
+        "max": 0.9447531583863777
+      },
+      "ubiquitin_like": {
+        "n": 1,
+        "mean": 1.0,
+        "min": 1.0,
+        "max": 1.0
+      }
+    },
+    "separation": 0.12395638891541239
+  },
+  "caveats": [
+    "Family labels are curator assertions; cross-check against each target's rcsb_title.",
+    "Sample size is tiny \u2014 within/across separation is descriptive, not a statistical claim.",
+    "Mean-pooling discards positional structure.",
+    "Cosine similarity in ESM-2 space sits in a narrow band; it is not a probability.",
+    "No baseline (random vectors, k-mer, BLOSUM) and no structural metric (TM-score) compared here."
+  ]
+}

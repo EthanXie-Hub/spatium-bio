@@ -1,82 +1,107 @@
 {
-  "$schema_note": "Hand-written artifact paired with examples/01_embed_and_compare.py and examples/figures/01_esm2_cosine_similarity.png. Schema is intentionally minimal until there is a second experiment to standardise against.",
-  "experiment": "01_esm2_cosine_similarity",
-  "date": "2026-05-30",
-  "produced_by": "examples/01_embed_and_compare.py",
-  "spatium_bio_version": "0.1.0",
-  "model": {
-    "name": "facebook/esm2_t12_35M_UR50D",
-    "params": "35M",
-    "hidden_size": 480,
-    "source": "huggingface transformers AutoModel"
+  "experiment": "embed_compare",
+  "provenance": {
+    "timestamp_utc": "2026-05-31T04:49:49+00:00",
+    "git_commit": "c3390f3",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "device": "cpu",
+    "model": "facebook/esm2_t12_35M_UR50D",
+    "versions": {
+      "python": "3.12.11",
+      "spatium_bio": "0.2.0",
+      "numpy": "2.4.6",
+      "torch": "2.12.0",
+      "transformers": "5.9.0"
+    }
   },
   "embedding": {
-    "input": "amino acid sequence (single chain)",
-    "output": "per-residue final hidden states, then mean-pooled across residues",
-    "special_tokens_stripped": true,
-    "device": "cpu",
-    "dtype": "float32"
-  },
-  "metric": {
-    "name": "cosine_similarity",
-    "definition": "dot(a, b) / (norm(a) * norm(b)) on mean-pooled embeddings",
-    "range": [-1.0, 1.0]
+    "method": "ESM-2 per-residue final hidden states, mean-pooled",
+    "metric": "cosine_similarity"
   },
   "targets": [
     {
-      "label": "Hb_alpha",
-      "name": "Hemoglobin alpha chain",
+      "id": "Hb_alpha",
+      "label": "Hb \u03b1",
+      "family": "globin",
       "pdb": "4HHB",
       "chain": "A",
-      "uniprot": "P69905",
-      "organism": "H. sapiens",
-      "n_residues": 141
+      "n_residues": 141,
+      "embedding_dim": 480,
+      "rcsb_title": "the crystal structure of human deoxyhaemoglobin at 1.74 angstroms resolution"
     },
     {
-      "label": "Hb_beta",
-      "name": "Hemoglobin beta chain",
+      "id": "Hb_beta",
+      "label": "Hb \u03b2",
+      "family": "globin",
       "pdb": "4HHB",
       "chain": "B",
-      "uniprot": "P68871",
-      "organism": "H. sapiens",
-      "n_residues": 146
+      "n_residues": 146,
+      "embedding_dim": 480,
+      "rcsb_title": "the crystal structure of human deoxyhaemoglobin at 1.74 angstroms resolution"
     },
     {
+      "id": "AdK",
       "label": "AdK",
-      "name": "Adenylate kinase",
+      "family": "other",
       "pdb": "1AKE",
       "chain": "A",
-      "uniprot": "P69441",
-      "organism": "E. coli",
-      "n_residues": 214
+      "n_residues": 214,
+      "embedding_dim": 480,
+      "rcsb_title": "structure of the complex between adenylate kinase from escherichia coli and the inhibitor ap5a refined at 1.9 angstroms resolution: a model for a catalytic transition state"
     }
   ],
   "cosine_similarity_matrix": {
-    "rows": ["Hb_alpha", "Hb_beta", "AdK"],
-    "cols": ["Hb_alpha", "Hb_beta", "AdK"],
+    "order": [
+      "Hb_alpha",
+      "Hb_beta",
+      "AdK"
+    ],
     "values": [
-      [1.0000, 0.9781, 0.6926],
-      [0.9781, 1.0000, 0.7078],
-      [0.6926, 0.7078, 1.0000]
+      [
+        1.0000000000000004,
+        0.9780818007846528,
+        0.6925763145726607
+      ],
+      [
+        0.9780818007846528,
+        1.0000000000000002,
+        0.7077584611454715
+      ],
+      [
+        0.6925763145726607,
+        0.7077584611454715,
+        0.9999999999999997
+      ]
     ]
   },
-  "observations": [
-    "Hb alpha vs Hb beta (paralogs): 0.9781 — closer than either pair vs adenylate kinase.",
-    "Hb alpha vs adenylate kinase: 0.6926.",
-    "Hb beta vs adenylate kinase: 0.7078.",
-    "The Hb-paralog cosine sits roughly 0.28 above the Hb-vs-AdK cosines."
-  ],
-  "what_this_shows": [
-    "Off-the-shelf ESM-2 35M mean-pooled embeddings preserve enough signal to rank a paralog above an unrelated enzyme on three sequences.",
-    "The script asserts the ordering (Hb alpha-beta > Hb-AdK), not magnitudes."
-  ],
-  "what_this_does_not_show": [
-    "It is not a fold-recognition benchmark. n = 3 sequences is far too small to claim anything about fold space.",
-    "Mean-pooling discards positional structure; per-residue or attention-aware probes may give very different rankings.",
-    "Cosine similarity in ESM-2 space is empirically squeezed into a narrow band; differences should not be interpreted as probabilities.",
-    "No comparison to TM-score, no comparison to baselines (random vectors, k-mer counts, BLOSUM), no error bars."
-  ],
-  "reproduce": "uv run --project packages/core python examples/01_embed_and_compare.py",
-  "figure": "examples/figures/01_esm2_cosine_similarity.png",
-  "note": "Values are taken directly from the script's reported output on first run (printed to stdout). They are exact to the precision shown; the script prints 4-decimal formatting. If a future rerun changes them due to library version drift, this file should be regenerated."
+  "family_summary": {
+    "within_family": {
+      "n": 1,
+      "mean": 0.9780818007846528,
+      "min": 0.9780818007846528,
+      "max": 0.9780818007846528
+    },
+    "across_family": {
+      "n": 2,
+      "mean": 0.7001673878590661,
+      "min": 0.6925763145726607,
+      "max": 0.7077584611454715
+    },
+    "per_family_within": {
+      "globin": {
+        "n": 1,
+        "mean": 0.9780818007846528,
+        "min": 0.9780818007846528,
+        "max": 0.9780818007846528
+      }
+    },
+    "separation": 0.2779144129255867
+  },
+  "caveats": [
+    "Family labels are curator assertions; cross-check against each target's rcsb_title.",
+    "Sample size is tiny \u2014 within/across separation is descriptive, not a statistical claim.",
+    "Mean-pooling discards positional structure.",
+    "Cosine similarity in ESM-2 space sits in a narrow band; it is not a probability.",
+    "No baseline (random vectors, k-mer, BLOSUM) and no structural metric (TM-score) compared here."
+  ]
 }
